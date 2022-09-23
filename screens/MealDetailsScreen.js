@@ -1,6 +1,8 @@
 import {Text, View, ScrollView, Image, StyleSheet} from 'react-native';
 import {MEALS} from '../data/dummy-data';
 import MealDetails from '../components/MealDetails';
+import Subtitle from '../components/MealDetails/Subtitle';
+import List from '../components/MealDetails/List';
 
 function MealDetailsScreen({route}) {
 
@@ -8,9 +10,9 @@ function MealDetailsScreen({route}) {
     const selectedMeal = MEALS.find((meal) => meal.id === mealId);
 
     return (
-        <View>
-            <Image style={styles.image} source={{uri: selectedMeal.imageUrl}}/>
-            <ScrollView style={styles.container}>
+        <ScrollView style={styles.container}>
+            <View style={styles.rootContainer}>
+                <Image style={styles.image} source={{uri: selectedMeal.imageUrl}}/>
                 <Text style={styles.title}>{selectedMeal.title}</Text>
                 <MealDetails
                     duration={selectedMeal.duration}
@@ -18,18 +20,23 @@ function MealDetailsScreen({route}) {
                     affordability={selectedMeal.affordability}
                     textStyle={styles.detailText}
                 />
-                <Text style={styles.subtitle}>Ingredients</Text>
-                {selectedMeal.ingredients.map(ingredient => <Text key={ingredient}>{ingredient}</Text>)}
-                <Text style={styles.subtitle}>Steps</Text>
-                {selectedMeal.steps.map(step => <Text key={step}>{step}</Text>)}
-            </ScrollView>
-        </View>
+                <View style={styles.listContainer}>
+                    <Subtitle>Ingredients</Subtitle>
+                    <List list={selectedMeal.ingredients}/>
+                    <Subtitle>Steps</Subtitle>
+                    <List list={selectedMeal.steps}/>
+                </View>
+            </View>
+        </ScrollView>
     );
 }
 
 export default MealDetailsScreen;
 
 const styles = StyleSheet.create({
+    rootContainer: {
+        marginBottom: 40
+    },
     image: {
         width: '100%',
         height: 350
@@ -47,14 +54,7 @@ const styles = StyleSheet.create({
     detailText: {
         color: 'white'
     },
-    subtitle: {
-        color: '#e2b497',
-        fontSize: 18,
-        fontWeight: 'bold',
-        padding: 6,
-        margin: 6,
-        textAlign: 'center',
-        borderBottomColor: '#e2b497',
-        borderBottomWidth: .75
+    listContainer: {
+        maxWidth: '100%'
     }
 })
